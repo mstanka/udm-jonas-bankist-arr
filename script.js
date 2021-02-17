@@ -130,9 +130,7 @@ let currentAcc;
 
 btnLogin.addEventListener('click', e => {
   e.preventDefault();
-  currentAcc = accounts.find(
-    acc => acc.username === inputLoginUsername.value
-  );
+  currentAcc = accounts.find(acc => acc.username === inputLoginUsername.value);
 
   if (currentAcc?.pin === Number(inputLoginPin.value)) {
     // display UI and message
@@ -172,4 +170,25 @@ btnTransfer.addEventListener('click', e => {
     // update UI
     updateUI(currentAcc);
   }
+});
+
+btnClose.addEventListener('click', e => {
+  e.preventDefault();
+
+  if (
+    inputCloseUsername.value === currentAcc.username &&
+    Number(inputClosePin.value) === currentAcc.pin
+  ) {
+    const index = accounts.findIndex(
+      acc => acc.username === currentAcc.username
+    );
+    // delete account
+    accounts.splice(index, 1);
+
+    // hide UI
+    containerApp.style.opacity = 0;
+  }
+
+  // clear inputs
+  inputCloseUsername.value = inputClosePin.value = '';
 });
