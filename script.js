@@ -82,6 +82,13 @@ const displayMovements = movements => {
 
 displayMovements(account1.movements);
 
+const calcDisplayBalance = movements => {
+  const balance = movements.reduce((acc, mov) => acc + mov, 0);
+  labelBalance.textContent = `${balance} EUR`;
+};
+
+calcDisplayBalance(account1.movements);
+
 // to create username from the first letters of the account owner
 // producing side effect, manipulating current object, don't return anything
 const createUsernames = accs => {
