@@ -82,3 +82,15 @@ const displayMovements = movements => {
 
 displayMovements(account1.movements);
 
+// to create username from the first letters of the account owner
+// producing side effect, manipulating current object, don't return anything
+const createUsernames = accs => {
+  accs.forEach(acc => {
+    acc.username = acc.owner
+      .toLowerCase()
+      .split(' ')
+      .map(name => name[0])
+      .join('');
+  });
+};
+createUsernames(accounts);
