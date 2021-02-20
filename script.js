@@ -130,6 +130,23 @@ const updateUI = acc => {
 
 let currentAcc;
 
+// FAKE ALWAYS LOGGED IN
+currentAcc = account1;
+updateUI(currentAcc);
+containerApp.style.opacity = 100;
+
+const now = new Date();
+// make is string and padded it with 0 at the beginning to get two digits
+const day = `${now.getDate()}`.padStart(2, 0);
+const month = `${now.getMonth() + 1}`.padStart(2, 0);
+const year = now.getFullYear();
+const hour = now.getHours();
+const min = now.getMinutes();
+// will display static time
+labelDate.textContent = `${day}/${month}/${year}, ${hour}:${min}`;
+
+// day/month/year
+
 btnLogin.addEventListener('click', e => {
   e.preventDefault();
   currentAcc = accounts.find(acc => acc.username === inputLoginUsername.value);
