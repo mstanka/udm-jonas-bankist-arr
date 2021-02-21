@@ -45,21 +45,22 @@ const account2 = {
   locale: 'en-US',
 };
 
-const account3 = {
-  owner: 'Steven Thomas Williams',
-  movements: [200, -200, 340, -300, -20, 50, 400, -460],
-  interestRate: 0.7,
-  pin: 3333,
-};
+// const account3 = {
+//   owner: 'Steven Thomas Williams',
+//   movements: [200, -200, 340, -300, -20, 50, 400, -460],
+//   interestRate: 0.7,
+//   pin: 3333,
+// };
 
-const account4 = {
-  owner: 'Sarah Smith',
-  movements: [430, 1000, 700, 50, 90],
-  interestRate: 1,
-  pin: 4444,
-};
+// const account4 = {
+//   owner: 'Sarah Smith',
+//   movements: [430, 1000, 700, 50, 90],
+//   interestRate: 1,
+//   pin: 4444,
+// };
 
-const accounts = [account1, account2, account3, account4];
+//const accounts = [account1, account2, account3, account4];
+const accounts = [account1, account2]
 
 // Elements
 const labelWelcome = document.querySelector('.welcome');
@@ -190,31 +191,59 @@ const updateUI = acc => {
   calcDisplaySummary(acc);
 };
 
-let currentAcc;
+const startLogOutTimer = () => {
+  const tick = () => {
+    const min = String(Math.trunc(time / 60)).padStart(2, 0);
+    const sec = String(time % 60).padStart(2, 0);
+
+    // in each call, print the remaining time to IU
+    labelTimer.textContent = `${min}:${sec}`;
+
+    // when 0 seconds, stop timer and log out user
+    if (time === 0) {
+      clearInterval(timer);
+      labelWelcome.textContent = 'Log in to get started';
+      containerApp.style.opacity = 0;
+    }
+    // decrease 1 s
+    time--; // time = time - 1;
+  };
+  // set time to 5 min
+  let time = 120;
+
+  // first call immediately
+  tick();
+  // call timer every second
+  timer = setInterval(tick, 1000);
+  return timer;
+};
+
+///////////////////////////////////
+let currentAcc, timer;
 
 //FAKE ALWAYS LOGGED IN
-currentAcc = account1;
-updateUI(currentAcc);
-containerApp.style.opacity = 100;
+// currentAcc = account1;
+// updateUI(currentAcc);
+// containerApp.style.opacity = 100;
 
 // Experimenting API
-const now = new Date();
-const options = {
-  hour: 'numeric',
-  minute: 'numeric',
-  day: 'numeric',
-  month: 'long', // 2-digit, numeric
-  year: 'numeric',
-  weekday: 'long', // short, narrow
-};
-const locale = navigator.language;
+// const now = new Date();
+// const options = {
+//   hour: 'numeric',
+//   minute: 'numeric',
+//   day: 'numeric',
+//   month: 'long', // 2-digit, numeric
+//   year: 'numeric',
+//   weekday: 'long', // short, narrow
+// };
+// const locale = navigator.language;
 
 // labelDate.textContent = new Intl.DateTimeFormat('en-US').format(now);
 // iso language codes e.g. http://www.lingoes.net/en/translator/langcode.htm
-labelDate.textContent = new Intl.DateTimeFormat(
-  currentAcc.locale,
-  options
-).format(now);
+// labelDate.textContent = new Intl.DateTimeFormat(
+//   currentAcc.locale,
+//   options
+// ).format(now);
 
 // const now = new Date();
 // // make is string and padded it with 0 at the beginning to get two digits
@@ -242,6 +271,10 @@ btnLogin.addEventListener('click', e => {
     // clear input fields
     inputLoginUsername.value = inputLoginPin.value = '';
     inputLoginPin.blur();
+
+    // timer
+    if (timer) clearInterval(timer);
+    timer = startLogOutTimer();
 
     // update UI
     updateUI(currentAcc);
@@ -273,6 +306,10 @@ btnTransfer.addEventListener('click', e => {
 
     // update UI
     updateUI(currentAcc);
+
+    //reset timer
+    clearInterval(timer);
+    timer = startLogOutTimer();
   }
 });
 
@@ -281,17 +318,23 @@ btnLoan.addEventListener('click', e => {
 
   const amount = Math.floor(inputLoanAmount.value);
   if (amount > 0 && currentAcc.movements.some(mov => mov >= amount * 0.1)) {
-    // add movement
-    currentAcc.movements.push(amount);
+    setTimeout(() => {
+      // add movement
+      currentAcc.movements.push(amount);
 
-    // add loan date
-    currentAcc.movementsDates.push(new Date().toISOString());
+      // add loan date
+      currentAcc.movementsDates.push(new Date().toISOString());
 
-    // udpate UI
-    updateUI(currentAcc);
+      // udpate UI
+      updateUI(currentAcc);
 
-    // clear input
-    inputLoanAmount.value = '';
+      // clear input
+      inputLoanAmount.value = '';
+
+      //reset timer
+      clearInterval(timer);
+      timer = startLogOutTimer();
+    }, 3000);
   }
 });
 
@@ -330,5 +373,29 @@ btnSort.addEventListener('click', e => {
 //   unit: 'mile-per-hour',
 //   currency: 'EUR'
 // }
-// console.log('US:      ', new Intl.NumberFormat('en-US').format(num));
+// console.log('US:', new Intl.NumberFormat('en-US').format(num));
 // console.log(navigator.language, new Intl.NumberFormat(navigator.language, options2).format(num));
+
+/////////////////////
+//setTimeout(() => console.log('Here is your pizza'), 3000);
+// setTimeout(
+//   (ing1, ing2) => console.log(`Here is your pizza with ${ing1} and ${ing2}`),
+//   3000,
+//   'spinach',
+//   'olives'
+// );
+// console.log('Waiting....');
+
+// const ingredients = ['olives', 'spinach'];
+// const pizzaTimer = setTimeout(
+//   (ing1, ing2) => console.log(`Here is your pizza with ${ing1} and ${ing2}`),
+//   3000,
+//   ...ingredients
+// );
+// if (ingredients.includes('spinach')) clearTimeout(pizzaTimer);
+
+/////////////////////
+// setInterval(() => {
+//   const now = new Date();
+//   console.log(now);
+// }, 1000);
