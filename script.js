@@ -302,7 +302,7 @@ btnTransfer.addEventListener('click', e => {
 
     // add transfer date
     currentAcc.movementsDates.push(new Date().toISOString());
-    receiverAcc.movementDates.push(new Date().toISOString());
+    receiverAcc.movementsDates.push(new Date().toISOString());
 
     // update UI
     updateUI(currentAcc);
